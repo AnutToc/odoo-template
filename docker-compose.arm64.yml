@@ -1,0 +1,42 @@
+version: "3"
+services:
+    odoo:
+
+        build:
+            context: .
+            dockerfile: ./docker-images/odoo/development/Dockerfile
+        restart: unless-stopped
+        platform: linux/amd64
+        volumes:
+            - odoo_lib:/var/lib/odoo
+            - ./modules:/mnt/extra-addons
+            - ./third-party-modules:/mnt/third-party-modules
+        depends_on:
+            - db
+        ports:
+            - 8069:8069
+            - 8072:8072
+        environment:
+            - HOST=db
+            - USER=odoo
+            - PASSWORD=odoo
+            - POSTGRES_DB=postgres
+        links:
+            - db
+        command: --log-handler :DEBUG
+    db:
+        image: postgres:15
+        restart: unless-stopped
+        platform: linux/arm64
+        ports:
+            - 5432:5432
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=odoo
+            - POSTGRES_PASSWORD=odoo
+            - PGDATA=/var/lib/postgresql/data/pgdata
+volumes:
+    odoo_lib:
+    postgres_data:

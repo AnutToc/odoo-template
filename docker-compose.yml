@@ -1,0 +1,20 @@
+version: "3"
+services:
+    odoo:
+        restart: unless-stopped
+        volumes:
+            - odoo_lib:/var/lib/odoo
+        depends_on:
+            - db
+        environment:
+            - HOST=db
+        links:
+            - db
+    db:
+        restart: unless-stopped
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+
+volumes:
+    odoo_lib:
+    postgres_data:
