@@ -1,4 +1,4 @@
-FROM odoo:17
+FROM odoo:17 # Specify the Odoo version here
 
 USER root
 RUN pip3 install -U pip

@@ -1,7 +1,7 @@
-# ODOO-17 Templates
+# ODOO Templates
 
-This is odoo version 17 templates
-
+This is odoo templates
+(Default Odoo17, PSQL15)
 -----------------------------------
 
 ## Requirements:
@@ -38,6 +38,16 @@ docker-compose logs -f --tail=20
 ### Print list containers
 ```
 docker-compose ps -a
+```
+
+### Reset db
+```
+docker-compose down -v
+```
+
+### Create new volumn
+```
+docker volume create odoo(version)_postgres_data
 ```
 
 ### More Command

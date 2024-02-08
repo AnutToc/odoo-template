@@ -1,23 +1,16 @@
 version: "3"
 services:
-    odoo:
-        build:
-            context: .
-            dockerfile: ./docker-images/odoo/development/Dockerfile
-        ports:
-            - 8069:8069
-        environment:
-            - USER=odoo
-            - PASSWORD=odoo
-            - POSTGRES_DB=postgres
-        volumes:
-            - ./modules:/mnt/extra-addons
-            - ./third-party-modules:/mnt/third-party-modules
-        command: --log-handler :DEBUG
-    db:
-        image: postgres:15
-        environment:
-            - POSTGRES_DB=postgres
-            - POSTGRES_USER=odoo
-            - POSTGRES_PASSWORD=odoo
-            - PGDATA=/var/lib/postgresql/data/pgdata
+  odoo:
+    ports:
+      - 8069:8069
+    environment:
+      - USER=odoo
+      - PASSWORD=odoo
+      - POSTGRES_DB=postgres
+    command: --log-handler :DEBUG
+  db:
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
