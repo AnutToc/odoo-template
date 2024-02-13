@@ -5,8 +5,10 @@ This is odoo templates
 -----------------------------------
 
 ## Requirements:
-Download and install Docker, Docker-Compose from https://www.docker.com/products/docker-desktop/
-
+Download and install Docker, Docker-Compose from 
+https://www.docker.com/products/docker-desktop/            
+Download and install pgAdmin4                                 
+from https://www.pgadmin.org/download/
 -----------------------------------
 ## Getting Starts
 
@@ -54,3 +56,21 @@ docker volume create odoo(version)_postgres_data
 ```
 docker-compose --help
 ```
+
+### Connect the Database (pgAdmin4)
+
+open pgAdmin4 
+right click on server > register > server
+
+Connection TAB 
+
+Hostname/address = localhost
+
+PORT = 8061 
+
+Maintenance database = postgres
+
+Usernam = odoo
+
+Password = odoo 
+
