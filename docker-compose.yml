@@ -21,7 +21,7 @@ services:
     image: postgres:15
     restart: unless-stopped
     ports:
-      - 8061:5432
+      - 8069:5432
     volumes:
       - odoo17_postgres_data:/var/lib/postgresql/data # Rename postgres volumn with odoo version 
     environment:

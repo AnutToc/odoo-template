@@ -66,7 +66,7 @@ Connection TAB
 
 Hostname/address = localhost
 
-PORT = 8061 
+PORT = 8069
 
 Maintenance database = postgres
 
