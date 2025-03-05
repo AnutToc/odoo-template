@@ -61,7 +61,8 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
-          pip install odoo==${{ matrix.odoo_version }}
+          git clone --depth 1 --branch ${{ matrix.odoo_version }} https://github.com/odoo/odoo.git
+          pip install -e ./odoo
       - name: Create Docker Network
         run: |
           docker network create odoo-network
