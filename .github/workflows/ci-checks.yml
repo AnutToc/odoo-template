@@ -70,7 +70,7 @@ jobs:
         run: sleep 30
       - name: Run Tests
         run: |
-          pytest --odoo-db-host=postgres --odoo-db-user=odoo --odoo-db-password=odoo --odoo-db-name=odoo
+          pytest --odoo-db-host=localhost --odoo-db-user=odoo --odoo-db-password=odoo --odoo-db-name=odoo
 
   build:
     runs-on: ubuntu-24.04
