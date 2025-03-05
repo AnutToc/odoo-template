@@ -4,6 +4,7 @@ flake8
 black
 pylint-odoo
 pytest-odoo
+lxml[html_clean]>=4.9.0
 
 # Excel Support
 xlwt
