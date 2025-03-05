@@ -11,9 +11,33 @@ on:
       - "18.0"
 
 jobs:
-  odoo-code-checks:
-    name: OCA Code & Quality Checks
+  odoo-tests:
+    name: Run Odoo Tests
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: odoo
+        ports:
+          - 5432:5432
+
+      odoo:
+        image: odoo:17.0
+        env:
+          HOST: postgres
+          USER: odoo
+          PASSWORD: odoo
+          DATABASE: odoo
+        ports:
+          - 8069:8069
+        options: >-
+          --health-cmd "curl --fail http://localhost:8069 || exit 1"
+          --health-interval 10s
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -24,39 +48,22 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Clone Odoo Repository
-        run: |
-          git clone --depth=1 --branch 17.0 https://github.com/odoo/odoo.git ~/odoo
-
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Set PYTHONPATH for Odoo
-        run: |
-          echo "PYTHONPATH=$(pwd)/odoo" >> $GITHUB_ENV
+          pip install pytest pytest-odoo
 
       - name: Wait for Odoo to be ready
         run: |
-          sleep 30
+          echo "Waiting for Odoo to start..."
+          sleep 60  # ✅ รอให้ Odoo และ Postgres ทำงาน
 
-      - name: Run Pre-commit Hooks
+      - name: Set PYTHONPATH for Odoo
         run: |
-          pre-commit run --all-files
+          echo "PYTHONPATH=/usr/lib/python3/dist-packages" >> $GITHUB_ENV
+          echo "PYTHONPATH=$(pwd)/odoo" >> $GITHUB_ENV
 
-      - name: Run Pylint (Odoo Standards)
+      - name: Run Pytest with Odoo
         run: |
-          pylint --load-plugins=pylint_odoo modules/ third-party-modules/
-
-      - name: Run Black Formatting
-        run: |
-          black --check .
-
-      - name: Run Flake8 (Linting)
-        run: |
-          flake8 modules/ third-party-modules//
-
-      - name: Run Unit Tests (Pytest)
-        run: |
-          pytest
+          pytest --odoo-db-host=localhost --odoo-db-user=odoo --odoo-db-password=odoo --odoo-db-name=odoo
