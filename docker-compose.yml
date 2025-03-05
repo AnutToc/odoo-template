@@ -1,7 +1,7 @@
 version: "3"
 services:
   odoo:
-    image: odoo:17  # Specify the Odoo image here
+    image: odoo:17.0  # Specify the Odoo image here
     restart: unless-stopped
     volumes:
       - odoo_lib:/var/lib/odoo
