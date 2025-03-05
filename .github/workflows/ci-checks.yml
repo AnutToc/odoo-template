@@ -25,20 +25,6 @@ jobs:
         ports:
           - 5432:5432
 
-      odoo:
-        image: odoo:17.0
-        env:
-          HOST: postgres
-          USER: odoo
-          PASSWORD: odoo
-          DATABASE: odoo
-        ports:
-          - 8069:8069
-        options: >-
-          --health-cmd "curl --fail http://localhost:8069 || exit 1"
-          --health-interval 10s
-          --health-retries 5
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -52,12 +38,34 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-odoo
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          echo "Waiting for PostgreSQL..."
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+
+      - name: Start Odoo Service
+        run: |
+          docker run -d --name odoo \
+            --link postgres:db \
+            -e HOST=db \
+            -e USER=odoo \
+            -e PASSWORD=odoo \
+            -e DATABASE=odoo \
+            -p 8069:8069 \
+            odoo:17.0
 
       - name: Wait for Odoo to be ready
         run: |
           echo "Waiting for Odoo to start..."
-          sleep 60  # ✅ รอให้ Odoo และ Postgres ทำงาน
+          sleep 30
 
       - name: Set PYTHONPATH for Odoo
         run: |
@@ -66,4 +74,4 @@ jobs:
 
       - name: Run Pytest with Odoo
         run: |
-          pytest --odoo-db-host=localhost --odoo-db-user=odoo --odoo-db-password=odoo --odoo-db-name=odoo
+          pytest --odoo-db-host=postgres --odoo-db-user=odoo --odoo-db-password=odoo --odoo-db-name=odoo
