@@ -1,3 +1,6 @@
+# Odoo Dependencies
+odoo==17
+
 # OCA CI/CD Tools
 pre-commit
 flake8
