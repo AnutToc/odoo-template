@@ -43,7 +43,7 @@ jobs:
 
       - name: Run Flake8 (Linting)
         run: |
-          flake8 extra-addons/
+          flake8 modules/ third-party-modules//
 
       - name: Run Unit Tests (Pytest)
         run: |
