@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/OCA/oca-pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: pylint-odoo
+      - id: flake8

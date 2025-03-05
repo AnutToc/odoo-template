@@ -1,0 +1,6 @@
+oca-ci
+bahttext
+xlwt
+num2words
+xlsxwriter
+xlrd
