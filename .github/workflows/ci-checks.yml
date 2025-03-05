@@ -35,7 +35,7 @@ jobs:
 
       - name: Run Pylint (Odoo Standards)
         run: |
-          pylint --load-plugins=pylint_odoo addons/
+          pylint --load-plugins=pylint_odoo extra-addons/
 
       - name: Run Black Formatting
         run: |
@@ -43,7 +43,7 @@ jobs:
 
       - name: Run Flake8 (Linting)
         run: |
-          flake8 addons/
+          flake8 extra-addons/
 
       - name: Run Unit Tests (Pytest)
         run: |

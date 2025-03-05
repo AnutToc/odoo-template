@@ -77,7 +77,7 @@ pre-commit run --all-files
 
 ### Run Pylint for Odoo
 ```
-pylint --load-plugins=pylint_odoo addons/
+pylint --load-plugins=pylint_odoo extra-addons/
 ```
 
 ### Run Black Formatting
@@ -87,7 +87,7 @@ black .
 
 ### Run Flake8 for Python Linting
 ```
-flake8 modules/
+flake8 extra-addons/
 ```
 
 ### Run Unit Tests (Pytest)
