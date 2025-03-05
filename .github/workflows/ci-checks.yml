@@ -91,10 +91,11 @@ jobs:
       - name: Run Tests
         run: |
           POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
-          pytest --odoo-db-host=$POSTGRES_CONTAINER \
-                 --odoo-db-user=odoo \
-                 --odoo-db-password=odoo \
-                 --odoo-db-name=odoo
+          export ODOO_DB_HOST=$POSTGRES_CONTAINER
+          export ODOO_DB_USER=odoo
+          export ODOO_DB_PASSWORD=odoo
+          export ODOO_DB_NAME=odoo
+          pytest
 
   build:
     runs-on: ubuntu-24.04
