@@ -1,16 +1,20 @@
 # ODOO Templates
 
-This is odoo templates
-(Default Odoo17, PSQL15)
------------------------------------
+This is an Odoo template for quick setup and deployment.  
+(Default Odoo 17, PostgreSQL 15)
 
-## Requirements:
-Download and install Docker, Docker-Compose from 
-https://www.docker.com/products/docker-desktop/            
-Download and install pgAdmin4                                 
-from https://www.pgadmin.org/download/
------------------------------------
-## Getting Starts
+---
+
+## **📌 Requirements**
+Before using this template, install the following:
+
+- **Docker & Docker Compose** → [Download](https://www.docker.com/products/docker-desktop)
+- **pgAdmin 4** → [Download](https://www.pgadmin.org/download/)
+- **Pre-commit Hooks** → `pip install pre-commit`
+
+---
+
+## **🚀 Getting Started**
 
 ### Build
 ```
@@ -55,6 +59,40 @@ docker volume create odoo(version)_postgres_data
 ### More Command
 ```
 docker-compose --help
+```
+
+### Code Quality Check (OCA Code Check)
+To ensure code quality and follow OCA standards, run the following checks
+
+### Install Pre-commit Hooks
+```
+pip install pre-commit
+pre-commit install
+```
+
+### Run Code Checks (Pre-commit)
+```
+pre-commit run --all-files
+```
+
+### Run Pylint for Odoo
+```
+pylint --load-plugins=pylint_odoo addons/
+```
+
+### Run Black Formatting
+```
+black .
+```
+
+### Run Flake8 for Python Linting
+```
+flake8 modules/
+```
+
+### Run Unit Tests (Pytest)
+```
+pytest
 ```
 
 ### Connect the Database (pgAdmin4)
