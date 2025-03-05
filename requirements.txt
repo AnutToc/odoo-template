@@ -5,6 +5,7 @@ black
 pylint-odoo
 pytest-odoo
 lxml[html_clean]>=4.9.0
+werkzeug<2.0.0
 
 # Excel Support
 xlwt
