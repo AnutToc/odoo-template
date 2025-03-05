@@ -1,0 +1,50 @@
+name: Odoo CI/CD Checks
+
+on:
+  push:
+    branches:
+      - main
+      - "18.0"
+  pull_request:
+    branches:
+      - main
+      - "18.0"
+
+jobs:
+  odoo-code-checks:
+    name: OCA Code & Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Pre-commit Hooks
+        run: |
+          pre-commit run --all-files
+
+      - name: Run Pylint (Odoo Standards)
+        run: |
+          pylint --load-plugins=pylint_odoo addons/
+
+      - name: Run Black Formatting
+        run: |
+          black --check .
+
+      - name: Run Flake8 (Linting)
+        run: |
+          flake8 addons/
+
+      - name: Run Unit Tests (Pytest)
+        run: |
+          pytest
