@@ -1,5 +1,4 @@
 # OCA CI/CD Tools
-oca-ci
 pre-commit
 flake8
 pylint-odoo
