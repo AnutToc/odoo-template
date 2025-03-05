@@ -1,0 +1,16 @@
+repos:
+  - repo: https://github.com/PyCQA/pylint
+    rev: v3.3.4
+    hooks:
+      - id: pylint
+        args: ["--load-plugins=pylint_odoo"]
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.2
+    hooks:
+      - id: flake8

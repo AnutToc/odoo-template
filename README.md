@@ -1,16 +1,19 @@
 # ODOO Templates
 
-This is odoo templates
-(Default Odoo17, PSQL15)
------------------------------------
+This is an Odoo(18.0) template for quick setup and deployment.  
 
-## Requirements:
-Download and install Docker, Docker-Compose from 
-https://www.docker.com/products/docker-desktop/            
-Download and install pgAdmin4                                 
-from https://www.pgadmin.org/download/
------------------------------------
-## Getting Starts
+---
+
+## **📌 Requirements**
+Before using this template, install the following:
+
+- **Docker & Docker Compose** → [Download](https://www.docker.com/products/docker-desktop)
+- **pgAdmin 4** → [Download](https://www.pgadmin.org/download/)
+- **Pre-commit Hooks** → `pip install pre-commit`
+
+---
+
+## **🚀 Getting Started**
 
 ### Build
 ```
@@ -49,12 +52,46 @@ docker-compose down -v
 
 ### Create new volumn
 ```
-docker volume create odoo(version)_postgres_data
+docker volume create odoo18_postgres_data
 ```
 
 ### More Command
 ```
 docker-compose --help
+```
+
+### Code Quality Check (OCA Code Check)
+To ensure code quality and follow OCA standards, run the following checks
+
+### Install Pre-commit Hooks
+```
+pip install pre-commit
+pre-commit install
+```
+
+### Run Code Checks (Pre-commit)
+```
+pre-commit run --all-files
+```
+
+### Run Pylint for Odoo
+```
+pylint --load-plugins=pylint_odoo addons/
+```
+
+### Run Black Formatting
+```
+black .
+```
+
+### Run Flake8 for Python Linting
+```
+flake8 modules/
+```
+
+### Run Unit Tests (Pytest)
+```
+pytest
 ```
 
 ### Connect the Database (pgAdmin4)
@@ -76,5 +113,4 @@ Password = odoo
 
 ### Error Handle
 
-Error at the first time (AssertionError: /var/lib/odoo/sessions: directory is not writable)
-Use docker-compose down -v for reset DB then docker-compose up -d again
+Error at the first time (AssertionError: /var/lib/odoo/sessions: directory is not writable) Use docker-compose down -v for reset DB then docker-compose up -d again
