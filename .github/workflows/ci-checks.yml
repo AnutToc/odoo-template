@@ -64,15 +64,17 @@ jobs:
       - name: Wait for PostgreSQL to be ready
         run: |
           docker ps
-          docker inspect postgres
+          POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
+          echo "PostgreSQL container name: $POSTGRES_CONTAINER"
           for i in {1..10}; do
             pg_isready -h localhost -p 5432 -U odoo && break
             sleep 5
           done
       - name: Start Odoo in Docker
         run: |
+          POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
           docker run -d --name odoo \
-            --link postgres:db \
+            --link $POSTGRES_CONTAINER:db \
             -e HOST=localhost \
             -e USER=odoo \
             -e PASSWORD=odoo \
