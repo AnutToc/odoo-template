@@ -1,6 +1,15 @@
+# OCA CI/CD Tools
 oca-ci
-bahttext
+pre-commit
+flake8
+pylint-odoo
+pytest-odoo
+
+# Excel Support
 xlwt
 num2words
 xlsxwriter
-xlrd
+xlrd==1.2.0
+
+# Thai Language Support
+bahttext
