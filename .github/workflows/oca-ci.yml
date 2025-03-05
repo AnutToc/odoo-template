@@ -34,7 +34,7 @@ jobs:
       - name: Run OCA Quality Tools
         run: |
           pip install pylint-odoo
-          pylint --load-plugins=pylint_odoo extra-addons/
+          pylint --load-plugins=pylint_odoo modules/ third-party-modules/
 
       - name: Run Odoo Tests
         run: |
