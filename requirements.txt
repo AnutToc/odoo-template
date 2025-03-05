@@ -1,6 +1,7 @@
 # OCA CI/CD Tools
 pre-commit
 flake8
+black
 pylint-odoo
 pytest-odoo
 
