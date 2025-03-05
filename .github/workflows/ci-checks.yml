@@ -61,6 +61,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
+          pip install odoo==${{ matrix.odoo_version }}
       - name: Create Docker Network
         run: |
           docker network create odoo-network
@@ -88,7 +89,11 @@ jobs:
         run: sleep 30
       - name: Run Tests
         run: |
-          pytest --odoo-db-host=localhost --odoo-db-user=odoo --odoo-db-password=odoo --odoo-db-name=odoo
+          POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
+          pytest --odoo-db-host=$POSTGRES_CONTAINER \
+                 --odoo-db-user=odoo \
+                 --odoo-db-password=odoo \
+                 --odoo-db-name=odoo
 
   build:
     runs-on: ubuntu-24.04
