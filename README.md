@@ -1,10 +1,11 @@
 # ODOO Templates
 
-This is an Odoo(18.0) template for quick setup and deployment.  
+This is an Odoo(18.0) template for quick setup and deployment.
 
 ---
 
 ## **📌 Requirements**
+
 Before using this template, install the following:
 
 - **Docker & Docker Compose** → [Download](https://www.docker.com/products/docker-desktop)
@@ -16,90 +17,106 @@ Before using this template, install the following:
 ## **🚀 Getting Started**
 
 ### Build
+
 ```
 docker-compose build
 ```
 
 ### Run
+
 ```
 docker-compose up -d
 ```
 
 ### Stop
+
 ```
 docker-compose down
 ```
 
 ### Restart
+
 ```
 docker-compose restart
 ```
 
 ### Print logs (Exit with ctrl+c)
+
 ```
 docker-compose logs -f --tail=20
 ```
 
 ### Print list containers
+
 ```
 docker-compose ps -a
 ```
 
 ### Reset db
+
 ```
 docker-compose down -v
 ```
 
 ### Create new volumn
+
 ```
 docker volume create odoo18_postgres_data
 ```
 
 ### More Command
+
 ```
 docker-compose --help
 ```
 
 ### Code Quality Check (OCA Code Check)
+
 To ensure code quality and follow OCA standards, run the following checks
 
 ### Install Pre-commit Hooks
+
 ```
 pip install pre-commit
 pre-commit install
 ```
 
 ### Run Code Checks (Pre-commit)
+
 ```
 pre-commit run --all-files
 ```
 
 ### Run Pylint for Odoo
+
 ```
-pylint --load-plugins=pylint_odoo addons/
+pylint --load-plugins=pylint_odoo modules/ third-party-modules/
 ```
 
 ### Run Black Formatting
+
 ```
 black .
 ```
 
 ### Run Flake8 for Python Linting
+
 ```
-flake8 modules/
+flake8 modules/ third-party-modules/
 ```
 
 ### Run Unit Tests (Pytest)
+
 ```
 pytest
 ```
 
 ### Connect the Database (pgAdmin4)
 
-open pgAdmin4 
+open pgAdmin4
 right click on server > register > server
 
-Connection TAB 
+Connection TAB
 
 Hostname/address = localhost
 
@@ -109,7 +126,7 @@ Maintenance database = postgres
 
 Usernam = odoo
 
-Password = odoo 
+Password = odoo
 
 ### Error Handle
 

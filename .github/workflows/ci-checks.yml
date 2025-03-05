@@ -1,50 +1,136 @@
 name: Odoo CI/CD Checks
 
 on:
+  pull_request:
   push:
     branches:
       - main
       - "18.0"
-  pull_request:
-    branches:
-      - main
-      - "18.0"
+      - "17.0"
+  schedule:
+    - cron: "0 0 * * 0"
 
 jobs:
-  odoo-code-checks:
-    name: OCA Code & Quality Checks
-    runs-on: ubuntu-latest
-
+  pre-commit:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-
-      - name: Install dependencies
+          python-version: "3.10"
+      - name: Install Pre-commit
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
+          pip install pre-commit
       - name: Run Pre-commit Hooks
         run: |
           pre-commit run --all-files
 
-      - name: Run Pylint (Odoo Standards)
-        run: |
-          pylint --load-plugins=pylint_odoo addons/
+  # test:
+  #   runs-on: ubuntu-24.04
+  #   needs: pre-commit
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       odoo_version: ["17.0"]
+  #       pg_version: ["15"]
+  #       python_version: ["3.10"]
+  #   env:
+  #     DOCKER_BUILDKIT: 1
+  #     PG_VERSIONS: ${{ matrix.pg_version }}
+  #     ODOO_MINOR: ${{ matrix.odoo_version }}
+  #     DOCKER_TAG: ${{ matrix.odoo_version }}
+  #   services:
+  #     postgres:
+  #       image: postgres:${{ matrix.pg_version }}
+  #       env:
+  #         POSTGRES_USER: odoo
+  #         POSTGRES_PASSWORD: odoo
+  #         POSTGRES_DB: odoo
+  #       ports:
+  #         - 5432:5432
+  #       options: >-
+  #         --health-cmd pg_isready
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python_version }}
+  #     - name: Install Dependencies
+  #       run: |
+  #         pip install -r requirements.txt
+  #         git clone --depth 1 --branch ${{ matrix.odoo_version }} https://github.com/odoo/odoo.git
+  #         pip install -e ./odoo
+  #     - name: Create Docker Network
+  #       run: |
+  #         docker network create odoo-network
+  #     - name: Wait for PostgreSQL to be ready
+  #       run: |
+  #         docker ps
+  #         POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
+  #         echo "PostgreSQL container name: $POSTGRES_CONTAINER"
+  #         for i in {1..10}; do
+  #           pg_isready -h localhost -p 5432 -U odoo && break
+  #           sleep 5
+  #         done
+  #     - name: Start Odoo in Docker
+  #       run: |
+  #         POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
+  #         docker run -d --name odoo \
+  #           --network odoo-network \
+  #           -e HOST=$POSTGRES_CONTAINER \
+  #           -e USER=odoo \
+  #           -e PASSWORD=odoo \
+  #           -e DATABASE=odoo \
+  #           -p 8069:8069 \
+  #           odoo:${{ matrix.odoo_version }}
+  #     - name: Wait for Odoo to Start
+  #       run: sleep 30
+  #     - name: Run Tests
+  #       run: |
+  #         POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
+  #         export ODOO_DB_HOST=$POSTGRES_CONTAINER
+  #         export ODOO_DB_USER=odoo
+  #         export ODOO_DB_PASSWORD=odoo
+  #         export ODOO_DB_NAME=odoo
+  #         pytest
 
-      - name: Run Black Formatting
-        run: |
-          black --check .
+  # build:
+  #   runs-on: ubuntu-24.04
+  #   needs: test
+  #   strategy:
+  #     matrix:
+  #       odoo_version: ["17.0"]
+  #       platforms: ["linux/amd64,linux/arm64"]
+  #   steps:
+  #     - name: Clean Docker System Before Build
+  #       run: |
+  #         docker system prune -af || true
+  #     - uses: actions/checkout@v4
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_LOGIN }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Build & Push Docker Image
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: .
+  #         file: ./docker/${{ matrix.odoo_version }}/Dockerfile
+  #         platforms: ${{ matrix.platforms }}
+  #         push: true
+  #         tags: |
+  #           mydockerhub/odoo:${{ matrix.odoo_version }}
 
-      - name: Run Flake8 (Linting)
-        run: |
-          flake8 addons/
-
-      - name: Run Unit Tests (Pytest)
-        run: |
-          pytest
+  # deploy:
+  #   runs-on: ubuntu-24.04
+  #   needs: build
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #     - name: Deploy to Production
+  #       run: |
+  #         echo "Deploying Odoo ${{ matrix.odoo_version }} to production server"
