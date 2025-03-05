@@ -1,5 +1,5 @@
 # Odoo Dependencies
-odoo==17
+odoo==17.0
 
 # OCA CI/CD Tools
 pre-commit
