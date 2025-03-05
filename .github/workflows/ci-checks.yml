@@ -48,6 +48,11 @@ jobs:
           POSTGRES_DB: odoo
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
@@ -58,6 +63,8 @@ jobs:
           pip install -r requirements.txt
       - name: Wait for PostgreSQL to be ready
         run: |
+          docker ps
+          docker inspect postgres
           for i in {1..10}; do
             pg_isready -h localhost -p 5432 -U odoo && break
             sleep 5
