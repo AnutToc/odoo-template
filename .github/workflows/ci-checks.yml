@@ -61,6 +61,9 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
+      - name: Create Docker Network
+        run: |
+          docker network create odoo-network
       - name: Wait for PostgreSQL to be ready
         run: |
           docker ps
@@ -74,8 +77,8 @@ jobs:
         run: |
           POSTGRES_CONTAINER=$(docker ps --filter "ancestor=postgres:${{ matrix.pg_version }}" --format "{{.Names}}")
           docker run -d --name odoo \
-            --link $POSTGRES_CONTAINER:db \
-            -e HOST=localhost \
+            --network odoo-network \
+            -e HOST=$POSTGRES_CONTAINER \
             -e USER=odoo \
             -e PASSWORD=odoo \
             -e DATABASE=odoo \
