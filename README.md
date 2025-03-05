@@ -74,3 +74,7 @@ Usernam = odoo
 
 Password = odoo 
 
+### Error Handle
+
+Error at the first time (AssertionError: /var/lib/odoo/sessions: directory is not writable)
+Use docker-compose down -v for reset DB then docker-compose up -d again
