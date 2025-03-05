@@ -1,7 +1,7 @@
 version: "3"
 services:
   odoo:
-    image: odoo:17.0  # Specify the Odoo image here
+    image: odoo:17.0 # Specify the Odoo image here
     restart: unless-stopped
     volumes:
       - odoo_lib:/var/lib/odoo
@@ -23,7 +23,7 @@ services:
     ports:
       - 8061:5432
     volumes:
-      - odoo17_postgres_data:/var/lib/postgresql/data # Rename postgres volumn with odoo version 
+      - odoo17_postgres_data:/var/lib/postgresql/data # Rename postgres volumn with odoo version
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=odoo
