@@ -1,14 +1,25 @@
 version: "3"
 services:
+  init-odoo:
+    image: odoo:19.0
+    user: root
+    command: chown -R odoo:odoo /var/lib/odoo
+    volumes:
+      - odoo_lib:/var/lib/odoo
+
   odoo:
-    image: odoo:17.0 # Specify the Odoo image here
+    image: odoo:19.0 # Specify the Odoo image here
     restart: unless-stopped
     volumes:
       - odoo_lib:/var/lib/odoo
       - ./modules:/mnt/extra-addons
       - ./third-party-modules:/mnt/third-party-modules
+      - ./oca-modules:/mnt/oca-modules
     depends_on:
-      - db
+      init-odoo:
+        condition: service_completed_successfully
+      db:
+        condition: service_started
     environment:
       - HOST=db
       - USER=odoo
